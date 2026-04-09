@@ -3,8 +3,13 @@
 # Sehuatang 爬虫系统 - 一键部署脚本
 # ===============================================
 #
-# 一行命令安装:
-#   curl -fsSL https://raw.githubusercontent.com/blank-cat-1/CH-cat/main/deploy.sh | bash
+# 下载方式:
+#   curl -fsSL https://raw.githubusercontent.com/blank-cat-1/CH-cat/main/deploy.sh -o deploy.sh
+#   chmod +x deploy.sh
+#   ./deploy.sh
+#
+# 命令行安装:
+#   curl -fsSL https://raw.githubusercontent.com/blank-cat-1/CH-cat/main/deploy.sh | bash install
 #
 # ===============================================
 

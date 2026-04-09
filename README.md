@@ -4,18 +4,21 @@
 
 ## 🚀 一键安装（NAS/服务器）
 
-复制以下命令，粘贴到终端，回车即可自动下载并运行部署脚本：
+### 方式一：下载后运行（推荐，支持交互式菜单）
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/blank-cat-1/CH-cat/main/deploy.sh | bash
+curl -fsSL https://raw.githubusercontent.com/blank-cat-1/CH-cat/main/deploy.sh -o deploy.sh
+chmod +x deploy.sh
+./deploy.sh
 ```
 
-> 💡 **提示**: 首次运行会显示交互式菜单，按数字选择操作即可。
->
-> ⚠️ 如遇缓存问题，添加 `-H "Cache-Control: no-cache"`:
-> ```bash
-> curl -fsSL -H "Cache-Control: no-cache" https://raw.githubusercontent.com/blank-cat-1/CH-cat/main/deploy.sh | bash
-> ```
+### 方式二：命令行安装（无需交互）
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/blank-cat-1/CH-cat/main/deploy.sh | bash install
+```
+
+支持的命令：`install` | `update` | `build` | `start` | `stop` | `restart` | `status` | `logs` | `uninstall`
 
 ## 功能特性
 
