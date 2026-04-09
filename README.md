@@ -11,6 +11,11 @@ curl -fsSL https://raw.githubusercontent.com/blank-cat-1/CH-cat/main/deploy.sh |
 ```
 
 > 💡 **提示**: 首次运行会显示交互式菜单，按数字选择操作即可。
+>
+> ⚠️ 如遇缓存问题，添加 `-H "Cache-Control: no-cache"`:
+> ```bash
+> curl -fsSL -H "Cache-Control: no-cache" https://raw.githubusercontent.com/blank-cat-1/CH-cat/main/deploy.sh | bash
+> ```
 
 ## 功能特性
 
