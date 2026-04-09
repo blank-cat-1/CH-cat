@@ -2,9 +2,8 @@ version: '3.8'
 
 services:
   crawler:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
+    # 使用预构建的镜像
+    image: ghcr.io/blank-cat-1/ch-cat:latest
     container_name: sehuatang-crawler
     ports:
       - "8900:8000"  # 后端API

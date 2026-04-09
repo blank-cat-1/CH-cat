@@ -18,6 +18,8 @@ set -e
 GITHUB_REPO="blank-cat-1/CH-cat"
 TARGET_DIR="/opt/sehuatang-crawler"
 CONTAINER_NAME="sehuatang-crawler"
+IMAGE_NAME="ghcr.io/blank-cat-1/ch-cat"
+IMAGE_TAG="latest"
 
 # 颜色
 RED='\033[0;31m'
@@ -113,14 +115,17 @@ update_code() {
     fi
 }
 
-# 构建镜像
-build_image() {
-    log_info "构建 Docker 镜像 (包含 Chrome + ChromeDriver)..."
+# 拉取镜像
+pull_image() {
+    log_info "从镜像仓库拉取 Docker 镜像..."
     
-    COMPOSE_CMD=$(get_compose_cmd)
-    $COMPOSE_CMD -f "${TARGET_DIR}/docker-compose.yml" build --no-cache
+    # 拉取最新镜像
+    if ! docker pull "${IMAGE_NAME}:${IMAGE_TAG}"; then
+        log_error "镜像拉取失败，请检查网络或认证配置"
+        exit 1
+    fi
     
-    log_success "镜像构建完成"
+    log_success "镜像拉取完成"
 }
 
 # 启动服务
@@ -177,8 +182,8 @@ install_all() {
         log_warn "请编辑 ${TARGET_DIR}/.env 文件配置必要的环境变量"
     fi
     
-    # 5. 构建并启动
-    build_image
+    # 5. 拉取镜像并启动
+    pull_image
     start_services
     
     echo ""
