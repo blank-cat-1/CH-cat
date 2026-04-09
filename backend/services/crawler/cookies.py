@@ -26,12 +26,10 @@ def get_active_cookies() -> Optional[str]:
     try:
         # 首先尝试从数据库获取
         try:
-            from ...core.database import get_db
+            from ...core.database import get_db_session
             from sqlalchemy import text
             
-            db_gen = get_db()
-            db = next(db_gen)
-            try:
+            with get_db_session() as db:
                 result = db.execute(text("""
                     SELECT cookie_string 
                     FROM cookies 
@@ -43,8 +41,6 @@ def get_active_cookies() -> Optional[str]:
                 if result and result[0]:
                     logger.debug("从数据库获取到激活的Cookie")
                     return result[0]
-            finally:
-                db.close()
         except Exception as e:
             logger.debug(f"从数据库获取Cookie失败: {e}")
         
@@ -92,12 +88,10 @@ def save_cookies(cookie_string: str, name: str = "default", is_active: bool = Tr
         
         # 尝试保存到数据库
         try:
-            from ...core.database import get_db
+            from ...core.database import get_db_session
             from sqlalchemy import text
             
-            db_gen = get_db()
-            db = next(db_gen)
-            try:
+            with get_db_session() as db:
                 if is_active:
                     # 先取消所有Cookie的激活状态
                     db.execute(text("UPDATE cookies SET is_active = false"))
@@ -112,10 +106,7 @@ def save_cookies(cookie_string: str, name: str = "default", is_active: bool = Tr
                     'is_active': is_active
                 })
                 
-                db.commit()
                 logger.info("Cookie已保存到数据库")
-            finally:
-                db.close()
         except Exception as e:
             logger.debug(f"保存Cookie到数据库失败: {e}")
         
@@ -183,19 +174,14 @@ def delete_cookies(name: str = None) -> bool:
         
         # 从数据库删除
         try:
-            from ...core.database import get_db
+            from ...core.database import get_db_session
             from sqlalchemy import text
             
-            db_gen = get_db()
-            db = next(db_gen)
-            try:
+            with get_db_session() as db:
                 if name:
                     db.execute(text("DELETE FROM cookies WHERE name = :name"), {'name': name})
                 else:
                     db.execute(text("DELETE FROM cookies"))
-                db.commit()
-            finally:
-                db.close()
         except Exception as e:
             logger.debug(f"从数据库删除Cookie失败: {e}")
         

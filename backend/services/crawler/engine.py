@@ -14,8 +14,7 @@ import logging
 from .http_client import HttpClient
 from .parser import parse_forum_threads, parse_search_threads, parse_user_threads, parse_detail
 from .cookies import get_active_cookies
-from ..models import Post, Subscription
-from ...core.database import get_db
+from ...models import Post, Subscription
 from ...core.logging_config import CrawlerLogger
 
 logger = logging.getLogger(__name__)
@@ -140,9 +139,9 @@ class SubscriptionCrawler:
     async def _load_subscription(self) -> Optional[Dict[str, Any]]:
         """从数据库加载订阅配置"""
         try:
-            db_gen = get_db()
-            db = next(db_gen)
-            try:
+            from ...core.database import get_db_session
+            
+            with get_db_session() as db:
                 sub = db.query(Subscription).filter(Subscription.id == self.subscription_id).first()
                 if sub:
                     return {
@@ -161,8 +160,6 @@ class SubscriptionCrawler:
                         'typeids': sub.typeids or [],
                     }
                 return None
-            finally:
-                db.close()
         except Exception as e:
             logger.error(f"加载订阅配置失败: {e}")
             return None
@@ -330,11 +327,11 @@ class SubscriptionCrawler:
             return 0
         
         try:
-            db_gen = get_db()
-            db = next(db_gen)
-            saved_count = 0
+            from ...core.database import get_db_session
             
-            try:
+            with get_db_session() as db:
+                saved_count = 0
+                
                 for post_data in posts:
                     # 检查是否已存在
                     existing = db.query(Post).filter(Post.tid == post_data.tid).first()
@@ -359,11 +356,8 @@ class SubscriptionCrawler:
                     db.add(post)
                     saved_count += 1
                 
-                db.commit()
+                # 注意: get_db_session 会自动 commit
                 return saved_count
-                
-            finally:
-                db.close()
                 
         except Exception as e:
             logger.error(f"保存帖子失败: {e}")
@@ -372,16 +366,14 @@ class SubscriptionCrawler:
     def _mark_first_run_complete(self):
         """标记首次运行完成"""
         try:
-            db_gen = get_db()
-            db = next(db_gen)
-            try:
+            from ...core.database import get_db_session
+            
+            with get_db_session() as db:
                 sub = db.query(Subscription).filter(Subscription.id == self.subscription_id).first()
                 if sub:
                     sub.first_run_completed = True
-                    db.commit()
+                    # get_db_session 会自动 commit
                     logger.info(f"订阅 {self.subscription_id} 首次运行完成")
-            finally:
-                db.close()
         except Exception as e:
             logger.warning(f"标记首次运行完成失败: {e}")
     

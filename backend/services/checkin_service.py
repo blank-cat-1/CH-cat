@@ -37,24 +37,21 @@ async def run_daily_checkin() -> bool:
         
         # 记录到数据库
         try:
-            from core.database import get_db
+            from core.database import get_db_session
             from models.checkin import CheckinRecord
             
-            db_gen = get_db()
-            db = next(db_gen)
-            
-            record = CheckinRecord(
-                checkin_date=datetime.utcnow(),
-                status=status,
-                reward_type="points",
-                reward_amount=10,
-                reward_message=reward_message
-            )
-            db.add(record)
-            db.commit()
-            db.close()
-            
-            logger.info(f"签到记录已保存: {reward_message}")
+            with get_db_session() as db:
+                record = CheckinRecord(
+                    checkin_date=datetime.utcnow(),
+                    status=status,
+                    reward_type="points",
+                    reward_amount=10,
+                    reward_message=reward_message
+                )
+                db.add(record)
+                # get_db_session 会自动 commit
+                
+                logger.info(f"签到记录已保存: {reward_message}")
             
         except Exception as e:
             logger.error(f"保存签到记录失败: {e}")

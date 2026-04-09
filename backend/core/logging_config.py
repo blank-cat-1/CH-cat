@@ -97,6 +97,9 @@ class CrawlerLogger:
     def page_empty(self, page: int):
         self.logger.warning(f"⚠️ 第 {page} 页为空")
     
+    def page_empty(self, page: int):
+        self.logger.warning(f"⚠️ 第 {page} 页为空")
+    
     def page_result(self, page: int, total: int, filtered: int):
         self.logger.info(f"📊 第 {page} 页: 发现 {total} 个帖子，过滤后 {filtered} 个")
     

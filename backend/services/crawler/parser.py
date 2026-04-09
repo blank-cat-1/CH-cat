@@ -37,7 +37,7 @@ def parse_forum_threads(html: str, base_url: str = "") -> List[ThreadSummary]:
         for item in thread_list:
             try:
                 # 提取帖子标题和链接
-                title_elem = item.select_one('.s xiang a') or item.select_one('a.xiang') or item.select_one('a[href*="thread"]')
+                title_elem = item.select_one('.xiang a') or item.select_one('a.xiang') or item.select_one('a[href*="thread"]')
                 
                 if not title_elem:
                     continue
