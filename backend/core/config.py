@@ -87,9 +87,19 @@ class Settings(BaseSettings):
     emby_user_id: Optional[str] = Field(default=None, env="EMBY_USER_ID")
     emby_library_ids: Optional[str] = Field(default=None, env="EMBY_LIBRARY_IDS")
     
-    # ==================== FlareSolverr配置 ====================
+    # ==================== FlareSolverr配置（可选，仅非Selenium模式备用）====================
     flaresolverr_url: str = Field(default="http://localhost:8191", env="FLARESOLVERR_URL")
-    use_flaresolverr: bool = Field(default=True, env="USE_FLARESOLVERR")
+    use_flaresolverr: bool = Field(default=False, env="USE_FLARESOLVERR")  # 默认禁用，使用Selenium
+
+    # ==================== Selenium配置 ====================
+    selenium_headless: bool = Field(default=True, env="SELENIUM_HEADLESS")
+    selenium_user_agent: str = Field(
+        default="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        env="SELENIUM_USER_AGENT"
+    )
+    selenium_page_timeout: int = Field(default=30, env="SELENIUM_PAGE_TIMEOUT")
+    use_selenium_mode: bool = Field(default=True, env="USE_SELENIUM_MODE")
     
     def get_database_url(self) -> str:
         """获取完整的数据库连接URL"""

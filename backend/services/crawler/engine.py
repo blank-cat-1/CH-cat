@@ -55,8 +55,8 @@ class PostData:
 
 class SubscriptionCrawler:
     """订阅爬虫"""
-    
-    def __init__(self, subscription_id: int):
+
+    def __init__(self, subscription_id: int, use_selenium: bool = True):
         self.subscription_id = subscription_id
         self.subscription: Optional[Dict[str, Any]] = None
         self.http_client: Optional[HttpClient] = None
@@ -64,6 +64,7 @@ class SubscriptionCrawler:
         self.state = {}  # 运行状态
         self.total_new_posts = 0
         self.total_duration = 0.0
+        self.use_selenium = use_selenium
     
     async def run(self, trigger_type: str = 'manual') -> int:
         """
@@ -78,13 +79,14 @@ class SubscriptionCrawler:
         start_time = time.time()
         
         try:
-            # 0. 检查Cookie是否存在
-            cookies = get_active_cookies()
-            if not cookies:
-                logger.error(f"订阅 {self.subscription_id} 无法运行: Cookie未配置!")
-                logger.error("请先通过 POST /api/crawler/cookies 配置Cookie")
-                return 0
-            
+            # 0. Selenium 模式下不再强制检查 Cookie
+            if not self.use_selenium:
+                cookies = get_active_cookies()
+                if not cookies:
+                    logger.error(f"订阅 {self.subscription_id} 无法运行: Cookie未配置!")
+                    logger.error("请先通过 POST /api/crawler/cookies 配置Cookie 或使用 Selenium 模式")
+                    return 0
+
             # 1. 加载订阅配置
             self.subscription = await self._load_subscription()
             if not self.subscription:
@@ -96,8 +98,8 @@ class SubscriptionCrawler:
                 logger.warning(f"订阅 {self.subscription_id} 未激活，跳过执行")
                 return 0
             
-            # 2. 初始化HTTP客户端
-            self.http_client = HttpClient()
+            # 2. 初始化HTTP客户端 (Selenium 模式)
+            self.http_client = HttpClient(use_selenium=self.use_selenium)
             await self.http_client.create()
             
             # 3. 确定运行模式
@@ -398,16 +400,17 @@ class SubscriptionCrawler:
             logger.warning(f"发送通知失败: {e}")
 
 
-async def run_subscription(sub_id: int, trigger_type: str = 'manual') -> int:
+async def run_subscription(sub_id: int, trigger_type: str = 'manual', use_selenium: bool = True) -> int:
     """
     运行订阅爬虫的便捷函数
-    
+
     Args:
         sub_id: 订阅ID
         trigger_type: 触发类型
-        
+        use_selenium: 是否使用 Selenium 模式（自动维护Cookie）
+
     Returns:
         新增帖子数量
     """
-    crawler = SubscriptionCrawler(sub_id)
+    crawler = SubscriptionCrawler(sub_id, use_selenium=use_selenium)
     return await crawler.run(trigger_type)

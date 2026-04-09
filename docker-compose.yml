@@ -9,30 +9,41 @@ services:
     ports:
       - "8900:8000"  # 后端API
       - "3000:3000"  # 前端界面
+    env_file:
+      - .env
     environment:
       - DATABASE_HOST=postgres
       - DATABASE_PORT=5432
-      - DATABASE_NAME=sehuatang_db
-      - DATABASE_USER=postgres
-      - DATABASE_PASSWORD=postgres123
+      - DATABASE_NAME=${DATABASE_NAME:-sehuatang_db}
+      - DATABASE_USER=${DATABASE_USER:-postgres}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD:-postgres123}
       - PYTHONPATH=/app/backend
-      - ADMIN_PASSWORD=admin123
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
+      # Selenium 配置
+      - SELENIUM_HEADLESS=${SELENIUM_HEADLESS:-true}
+      - SELENIUM_PAGE_TIMEOUT=${SELENIUM_PAGE_TIMEOUT:-30}
+      - USE_SELENIUM_MODE=${USE_SELENIUM_MODE:-true}
+      # Chrome 环境变量
+      - CHROME_BIN=/usr/bin/google-chrome
     volumes:
       - data:/app/data
       - logs:/app/logs
     depends_on:
       - postgres
     restart: unless-stopped
+    shm_size: '2gb'  # Selenium 需要较大共享内存
 
   postgres:
     image: postgres:15-alpine
     container_name: sehuatang-postgres
     ports:
       - "15432:5432"
+    env_file:
+      - .env
     environment:
-      - POSTGRES_DB=sehuatang_db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres123
+      - POSTGRES_DB=${DATABASE_NAME:-sehuatang_db}
+      - POSTGRES_USER=${DATABASE_USER:-postgres}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD:-postgres123}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
