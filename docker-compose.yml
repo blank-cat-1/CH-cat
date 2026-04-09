@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  crawler:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: sehuatang-crawler
+    ports:
+      - "8900:8000"  # 后端API
+      - "3000:3000"  # 前端界面
+    environment:
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=sehuatang_db
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres123
+      - PYTHONPATH=/app/backend
+      - ADMIN_PASSWORD=admin123
+    volumes:
+      - data:/app/data
+      - logs:/app/logs
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: sehuatang-postgres
+    ports:
+      - "15432:5432"
+    environment:
+      - POSTGRES_DB=sehuatang_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  data:
+  logs:
+  postgres_data:
+
+networks:
+  default:
+    name: sehuatang-network
