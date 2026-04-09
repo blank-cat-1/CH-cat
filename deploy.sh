@@ -78,8 +78,18 @@ update_code() {
     if [ -d "${TARGET_DIR}/.git" ]; then
         log_info "检测到已有安装，正在更新..."
         # 先暂存本地修改，避免冲突
-        git -C "${TARGET_DIR}" stash 2>/dev/null || true
-        git -C "${TARGET_DIR}" pull origin main
+        git -C "${TARGET_DIR}" stash -u 2>/dev/null || true
+        # 强制拉取，避免本地冲突文件
+        git -C "${TARGET_DIR}" fetch origin main
+        # 检查是否需要重新克隆（如果有新文件在远程）
+        if ! git -C "${TARGET_DIR}" diff --quiet origin/main -- frontend/build/ 2>/dev/null; then
+            log_warn "检测到新的必要文件，重新克隆仓库..."
+            sudo rm -rf "${TARGET_DIR}"
+            sudo mkdir -p /opt
+            sudo git clone https://github.com/${GITHUB_REPO}.git "${TARGET_DIR}"
+        else
+            git -C "${TARGET_DIR}" reset --hard origin/main
+        fi
     else
         log_info "正在克隆仓库到 ${TARGET_DIR}..."
         sudo mkdir -p /opt
