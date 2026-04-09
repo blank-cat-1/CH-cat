@@ -44,7 +44,7 @@ RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
 COPY requirements.txt .
 
 # 安装 Python 依赖
-RUN pip install --no-cache-dir -r requirements.txt
+RUN rm -rf ~/.cache/pip && pip install --no-cache-dir -r requirements.txt
 
 # 全局安装 serve
 RUN npm install -g serve
