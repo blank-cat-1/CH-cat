@@ -28,7 +28,6 @@ from api.routes import (
     magnet_router,
     search_router,
     settings_router,
-    checkin_router,
     emby_router,
     telegram_router,
     notification_router,
@@ -105,7 +104,6 @@ app.include_router(crawler_router, prefix="/api/crawler", tags=["爬虫管理"])
 app.include_router(magnet_router, prefix="/api/magnets", tags=["磁力链接"])
 app.include_router(search_router, prefix="/api/search", tags=["搜索"])
 app.include_router(settings_router, prefix="/api/settings", tags=["设置"])
-app.include_router(checkin_router, prefix="/api/checkin", tags=["签到"])
 app.include_router(emby_router, prefix="/api/emby", tags=["Emby"])
 app.include_router(telegram_router, prefix="/api/telegram", tags=["Telegram"])
 app.include_router(notification_router, prefix="/api/notifications", tags=["通知"])

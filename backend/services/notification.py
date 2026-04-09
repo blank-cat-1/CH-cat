@@ -59,18 +59,6 @@ class NotificationService:
         except Exception as e:
             logger.error(f"发送错误通知失败: {e}")
     
-    async def send_checkin_result(self, status: str, message: str):
-        """发送签到结果通知"""
-        if not self.telegram_enabled:
-            return
-        
-        try:
-            status_emoji = "✅" if status == "success" else "❌"
-            full_message = f"{status_emoji} 签到结果\n\n{message}"
-            await self._send_telegram(full_message)
-        except Exception as e:
-            logger.error(f"发送签到通知失败: {e}")
-    
     async def _send_telegram(self, message: str):
         """发送Telegram消息"""
         try:

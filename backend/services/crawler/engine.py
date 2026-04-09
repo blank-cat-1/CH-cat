@@ -78,6 +78,13 @@ class SubscriptionCrawler:
         start_time = time.time()
         
         try:
+            # 0. 检查Cookie是否存在
+            cookies = get_active_cookies()
+            if not cookies:
+                logger.error(f"订阅 {self.subscription_id} 无法运行: Cookie未配置!")
+                logger.error("请先通过 POST /api/crawler/cookies 配置Cookie")
+                return 0
+            
             # 1. 加载订阅配置
             self.subscription = await self._load_subscription()
             if not self.subscription:

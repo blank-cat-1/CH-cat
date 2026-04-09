@@ -105,27 +105,6 @@ def remove_subscription_job(subscription_id: int) -> None:
     logger.info(f"移除定时任务: {job_id}")
 
 
-def add_checkin_job(
-    hour: int = 10,
-    minute: int = 0,
-    job_id: str = "daily_checkin"
-) -> None:
-    """添加每日签到任务"""
-    if not _scheduler:
-        init_scheduler()
-    
-    from services.checkin_service import run_daily_checkin
-    
-    _scheduler.add_job(
-        func=run_daily_checkin,
-        trigger=CronTrigger(hour=hour, minute=minute, timezone="Asia/Shanghai"),
-        id=job_id,
-        replace_existing=True
-    )
-    
-    logger.info(f"添加每日签到任务: {hour:02d}:{minute:02d}")
-
-
 def list_jobs() -> list:
     """列出所有任务"""
     if not _scheduler:
