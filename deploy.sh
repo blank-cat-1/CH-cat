@@ -51,21 +51,19 @@ check_network() {
     fi
 }
 
+# 仓库安装目录
+TARGET_DIR="/opt/sehuatang-crawler"
+
 # 克隆或更新仓库
 clone_or_update_repo() {
-    local target_dir="/opt/sehuatang-crawler"
-    
-    if [ -d "${target_dir}/.git" ]; then
+    if [ -d "${TARGET_DIR}/.git" ]; then
         echo -e "${YELLOW}[更新]${NC} 检测到已有安装，正在更新..."
-        cd "${target_dir}" && git pull
+        cd "${TARGET_DIR}" && git pull
     else
-        echo -e "${YELLOW}[安装]${NC} 正在克隆仓库到 ${target_dir}..."
+        echo -e "${YELLOW}[安装]${NC} 正在克隆仓库到 ${TARGET_DIR}..."
         sudo mkdir -p /opt
-        sudo git clone https://github.com/${GITHUB_REPO}.git "${target_dir}"
-        cd "${target_dir}"
+        sudo git clone https://github.com/${GITHUB_REPO}.git "${TARGET_DIR}"
     fi
-    
-    echo "${target_dir}"
 }
 
 # 下载并执行主脚本
@@ -104,11 +102,11 @@ main() {
     
     echo ""
     echo -e "${YELLOW}[1/2]${NC} 获取仓库..."
-    REPO_DIR=$(clone_or_update_repo)
+    clone_or_update_repo
     
     echo ""
     echo -e "${YELLOW}[2/2]${NC} 启动部署程序..."
-    download_and_run_main_script "${REPO_DIR}" "$@"
+    download_and_run_main_script "${TARGET_DIR}" "$@"
 }
 
 # 显示帮助
