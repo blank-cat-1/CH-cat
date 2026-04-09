@@ -59,3 +59,6 @@ htmlcov/
 *.bak
 *.tmp
 debug_*.html
+
+# 前端构建目录（例外）
+!frontend/build/

@@ -73,12 +73,28 @@ get_compose_cmd() {
     fi
 }
 
+# 克隆/更新代码
+update_code() {
+    if [ -d "${TARGET_DIR}/.git" ]; then
+        log_info "检测到已有安装，正在更新..."
+        # 先暂存本地修改，避免冲突
+        git -C "${TARGET_DIR}" stash 2>/dev/null || true
+        git -C "${TARGET_DIR}" pull origin main
+    else
+        log_info "正在克隆仓库到 ${TARGET_DIR}..."
+        sudo mkdir -p /opt
+        sudo git clone https://github.com/${GITHUB_REPO}.git "${TARGET_DIR}"
+    fi
+}
+
 # 拉取代码
 pull_code() {
     log_info "拉取最新代码..."
     
     if [ -d "${TARGET_DIR}/.git" ]; then
-        git -C "${TARGET_DIR}" pull origin main || git -C "${TARGET_DIR}" pull origin master
+        # 先暂存本地修改，避免冲突
+        git -C "${TARGET_DIR}" stash 2>/dev/null || true
+        git -C "${TARGET_DIR}" pull origin main
         log_success "代码更新完成"
     else
         log_error "项目目录不存在，请先安装"
@@ -91,7 +107,7 @@ build_image() {
     log_info "构建 Docker 镜像 (包含 Chrome + ChromeDriver)..."
     
     COMPOSE_CMD=$(get_compose_cmd)
-    git -C "${TARGET_DIR}" pull origin main
+    update_code
     $COMPOSE_CMD -f "${TARGET_DIR}/docker-compose.yml" build --no-cache
     
     log_success "镜像构建完成"
@@ -170,14 +186,7 @@ install_all() {
     fi
     
     # 2. 克隆/更新代码
-    if [ -d "${TARGET_DIR}/.git" ]; then
-        log_info "检测到已有安装，正在更新..."
-        git -C "${TARGET_DIR}" pull origin main
-    else
-        log_info "正在克隆仓库到 ${TARGET_DIR}..."
-        sudo mkdir -p /opt
-        sudo git clone https://github.com/${GITHUB_REPO}.git "${TARGET_DIR}"
-    fi
+    update_code
     
     # 3. 检查配置文件
     if [ ! -f "${TARGET_DIR}/.env" ] && [ -f "${TARGET_DIR}/.env.example" ]; then
