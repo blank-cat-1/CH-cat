@@ -54,6 +54,12 @@ check_env() {
         return 1
     fi
     
+    # 检查 Docker Compose (支持 docker compose 和 docker-compose 两种)
+    if ! docker compose version &> /dev/null && ! command -v docker-compose &> /dev/null; then
+        log_error "Docker Compose 未安装，请先安装 Docker Compose"
+        return 1
+    fi
+    
     log_success "环境检查通过"
     return 0
 }
@@ -270,9 +276,20 @@ show_banner() {
 main() {
     show_banner
     
-    # 如果已在仓库目录
-    if [ -f "./scripts/deploy.sh" ]; then
-        TARGET_DIR="$(pwd)"
+    # 获取脚本所在目录和当前目录
+    SCRIPT_SOURCE="${BASH_SOURCE[0]}"
+    SCRIPT_DIR="$(cd "$(dirname "${SCRIPT_SOURCE}")" && pwd)"
+    CURRENT_DIR="$(pwd)"
+    
+    # 确定项目目录优先级：
+    # 1. 如果当前目录有 docker-compose.yml，用当前目录
+    # 2. 否则用默认的 /opt/sehuatang-crawler
+    if [ -f "${CURRENT_DIR}/docker-compose.yml" ]; then
+        TARGET_DIR="${CURRENT_DIR}"
+        log_info "检测到当前目录为项目目录: ${TARGET_DIR}"
+    elif [ -f "${SCRIPT_DIR}/docker-compose.yml" ]; then
+        TARGET_DIR="${SCRIPT_DIR}"
+        log_info "检测到脚本目录为项目目录: ${TARGET_DIR}"
     fi
     
     COMMAND=$1
