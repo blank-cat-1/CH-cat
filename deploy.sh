@@ -85,14 +85,19 @@ update_code() {
         if ! git -C "${TARGET_DIR}" diff --quiet origin/main -- frontend/build/ 2>/dev/null; then
             log_warn "检测到新的必要文件，重新克隆仓库..."
             sudo rm -rf "${TARGET_DIR}"
-            sudo mkdir -p /opt
+            sudo mkdir -p "$(dirname "${TARGET_DIR}")"
             sudo git clone https://github.com/${GITHUB_REPO}.git "${TARGET_DIR}"
         else
             git -C "${TARGET_DIR}" reset --hard origin/main
         fi
     else
         log_info "正在克隆仓库到 ${TARGET_DIR}..."
-        sudo mkdir -p /opt
+        # 确保父目录存在
+        sudo mkdir -p "$(dirname "${TARGET_DIR}")"
+        # 如果目录存在但为空，删除它
+        if [ -d "${TARGET_DIR}" ] && [ -z "$(ls -A "${TARGET_DIR}")" ]; then
+            rmdir "${TARGET_DIR}"
+        fi
         sudo git clone https://github.com/${GITHUB_REPO}.git "${TARGET_DIR}"
     fi
 }
