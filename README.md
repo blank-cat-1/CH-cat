@@ -4,22 +4,18 @@
 
 ## 🚀 一键部署（NAS/服务器）
 
-镜像由 GitHub Actions 自动构建，推送到 `ghcr.io`，拉取即可运行。
+镜像由 GitHub Actions 自动构建，无需克隆代码，直接拉取运行。
 
 ```bash
-# 1. 克隆或更新代码
-git clone https://github.com/blank-cat-1/CH-cat.git /opt/sehuatang-crawler
-cd /opt/sehuatang-crawler
+# 一条命令搞定（下载 docker-compose.yml 和 .env，然后启动）
+curl -fsSL https://raw.githubusercontent.com/blank-cat-1/CH-cat/main/docker-compose.yml -o docker-compose.yml \
+  && curl -fsSL https://raw.githubusercontent.com/blank-cat-1/CH-cat/main/.env.example -o .env \
+  && docker compose up -d
 
-# 2. 创建配置文件
-cp .env.example .env
-# 编辑 .env，填入必要的环境变量（见下方配置说明）
+# 编辑 .env 填入必要的环境变量后重启
+docker compose down && docker compose up -d
 
-# 3. 拉取最新镜像并启动
-docker compose pull
-docker compose up -d
-
-# 更新时重复第 3 步即可
+# 更新时
 docker compose pull && docker compose up -d
 ```
 
