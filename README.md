@@ -26,15 +26,13 @@ docker compose pull && docker compose up -d
 **1. 创建 `docker-compose.yml`：**
 
 ```yaml
-version: '3.8'
-
 services:
   crawler:
     image: ghcr.io/blank-cat-1/ch-cat:latest
     container_name: sehuatang-crawler
     ports:
-      - "8900:8000"
-      - "3000:3000"
+      - "3000:3000"  # 前端界面
+      - "8000:8000"  # 后端API（前端页面内部调用）
     env_file:
       - .env
     environment:
@@ -60,8 +58,7 @@ services:
   postgres:
     image: postgres:15-alpine
     container_name: sehuatang-postgres
-    ports:
-      - "15432:5432"
+    # 数据库端口不对外暴露，仅 Docker 内部访问
     env_file:
       - .env
     environment:
@@ -186,6 +183,8 @@ sehuatang-crawler/
 ## API 文档
 
 启动后访问: http://localhost:8000/docs
+
+> 注意：数据库 `:5432` 和后端 `:8000` 仅供内部使用，请勿在防火墙暴露这两个端口。
 
 ## 主要API
 
