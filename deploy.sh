@@ -133,7 +133,7 @@ start_services() {
     log_info "启动服务..."
     
     COMPOSE_CMD=$(get_compose_cmd)
-    $COMPOSE_CMD -f "${TARGET_DIR}/docker-compose.yml" up -d
+    $COMPOSE_CMD -f "${TARGET_DIR}/docker-compose.yaml" up -d
     
     # 等待服务启动
     sleep 3
@@ -144,7 +144,7 @@ start_services() {
 # 查看状态
 show_status() {
     COMPOSE_CMD=$(get_compose_cmd)
-    $COMPOSE_CMD -f "${TARGET_DIR}/docker-compose.yml" ps
+    $COMPOSE_CMD -f "${TARGET_DIR}/docker-compose.yaml" ps
     
     if docker ps --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
         log_success "爬虫服务运行中"

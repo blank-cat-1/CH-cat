@@ -5,7 +5,6 @@
 """
 
 from sqlalchemy import create_engine, text
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from contextlib import contextmanager
 from typing import Generator
@@ -30,9 +29,6 @@ engine = create_engine(
 
 # 创建会话工厂
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# 创建基础模型类
-Base = declarative_base()
 
 
 def get_db() -> Generator[Session, None, None]:
@@ -86,9 +82,10 @@ def check_db_health() -> bool:
 
 def init_database():
     """初始化数据库，创建所有表"""
+    from models.base import Base
     from models import import_all_models
     
-    # 导入所有模型
+    # 导入所有模型（触发所有 model 类执行，注册到 Base.metadata）
     import_all_models()
     
     # 创建所有表

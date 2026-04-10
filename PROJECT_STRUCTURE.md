@@ -68,7 +68,7 @@ sehuatang-crawler/
 ├── docker/                     # Docker配置
 │   └── Dockerfile
 │
-├── docker-compose.yml          # Docker Compose配置
+├── docker-compose.yaml          # Docker Compose配置
 ├── requirements.txt           # Python依赖
 └── README.md                   # 项目说明
 ```

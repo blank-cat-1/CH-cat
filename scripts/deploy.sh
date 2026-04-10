@@ -22,7 +22,7 @@ set -e
 REPO_URL="https://github.com/你的用户名/sehuatang-crawler.git"  # 修改为你的仓库地址
 PROJECT_DIR="/volume1/docker/sehuatang-crawler"  # NAS 上的项目目录
 CONTAINER_NAME="sehuatang-crawler"
-COMPOSE_FILE="docker-compose.yml"
+COMPOSE_FILE="docker-compose.yaml"
 
 # 颜色
 RED='\033[0;31m'

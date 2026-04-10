@@ -7,8 +7,8 @@
 镜像由 GitHub Actions 自动构建，无需克隆代码，直接拉取运行。
 
 ```bash
-# 一条命令搞定（下载 docker-compose.yml 和 .env，然后启动）
-curl -fsSL https://raw.githubusercontent.com/blank-cat-1/CH-cat/main/docker-compose.yml -o docker-compose.yml \
+# 一条命令搞定（下载 docker-compose.yaml 和 .env，然后启动）
+curl -fsSL https://raw.githubusercontent.com/blank-cat-1/CH-cat/main/docker-compose.yaml -o docker-compose.yaml \
   && curl -fsSL https://raw.githubusercontent.com/blank-cat-1/CH-cat/main/.env.example -o .env \
   && docker compose up -d
 
@@ -23,7 +23,7 @@ docker compose pull && docker compose up -d
 
 如果无法访问 GitHub raw，也可以直接复制下方文件内容到本地部署。
 
-**1. 创建 `docker-compose.yml`：**
+**1. 创建 `docker-compose.yaml`：**
 
 ```yaml
 services:
@@ -176,7 +176,7 @@ sehuatang-crawler/
 │   └── start.sh          # 启动脚本
 ├── docker/               # Docker配置
 │   └── Dockerfile         # 自动安装 Chrome + ChromeDriver
-├── docker-compose.yml
+├── docker-compose.yaml
 └── requirements.txt
 ```
 
