@@ -1,0 +1,33 @@
+{
+  "short_name": "番号库",
+  "name": "Sehuatang 番号库管理系统",
+  "description": "Sehuatang 爬虫系统 - 番号库管理、订阅管理、数据总览",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#3b82f6",
+  "background_color": "#ffffff",
+  "categories": ["entertainment", "utilities"],
+  "lang": "zh-CN",
+  "scope": "/",
+  "prefer_related_applications": false
+}
