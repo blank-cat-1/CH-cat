@@ -2,23 +2,26 @@
 
 论坛爬虫、订阅管理、通知推送系统。
 
-## 🚀 一键安装（NAS/服务器）
+## 🚀 一键部署（NAS/服务器）
 
-### 方式一：下载后运行（推荐，支持交互式菜单）
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/blank-cat-1/CH-cat/main/deploy.sh -o deploy.sh
-chmod +x deploy.sh
-./deploy.sh
-```
-
-### 方式二：命令行安装（无需交互）
+镜像由 GitHub Actions 自动构建，推送到 `ghcr.io`，拉取即可运行。
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/blank-cat-1/CH-cat/main/deploy.sh | bash install
-```
+# 1. 克隆或更新代码
+git clone https://github.com/blank-cat-1/CH-cat.git /opt/sehuatang-crawler
+cd /opt/sehuatang-crawler
 
-支持的命令：`install` | `update` | `build` | `start` | `stop` | `restart` | `status` | `logs` | `uninstall`
+# 2. 创建配置文件
+cp .env.example .env
+# 编辑 .env，填入必要的环境变量（见下方配置说明）
+
+# 3. 拉取最新镜像并启动
+docker compose pull
+docker compose up -d
+
+# 更新时重复第 3 步即可
+docker compose pull && docker compose up -d
+```
 
 ## 功能特性
 
@@ -35,11 +38,11 @@ curl -fsSL https://raw.githubusercontent.com/blank-cat-1/CH-cat/main/deploy.sh |
 ### 使用 Docker (推荐)
 
 ```bash
-# 启动服务（自动安装 Chrome + ChromeDriver）
-docker-compose up -d
+# 拉取最新镜像并启动
+docker compose up -d
 
 # 查看日志
-docker-compose logs -f
+docker compose logs -f
 ```
 
 ### 本地开发
