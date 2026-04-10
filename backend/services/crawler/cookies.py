@@ -30,7 +30,7 @@ def get_active_cookies() -> Optional[str]:
     try:
         # 首先尝试从数据库获取
         try:
-            from ..core.database import get_db_session
+            from backend.core.database import get_db_session
             from sqlalchemy import text
 
             with get_db_session() as db:
@@ -114,7 +114,7 @@ def save_cookies(cookie_string: str, name: str = "default", is_active: bool = Tr
 
         # 尝试保存到数据库
         try:
-            from ..core.database import get_db_session
+            from backend.core.database import get_db_session
             from sqlalchemy import text
 
             with get_db_session() as db:
@@ -205,7 +205,7 @@ def delete_cookies(name: str = None) -> bool:
 
         # 从数据库删除
         try:
-            from ..core.database import get_db_session
+            from backend.core.database import get_db_session
             from sqlalchemy import text
 
             with get_db_session() as db:
@@ -247,7 +247,7 @@ async def sync_browser_cookies() -> bool:
 
             # 保存到数据库
             try:
-                from ..core.database import get_db_session
+                from backend.core.database import get_db_session
                 from sqlalchemy import text
 
                 cookie_string = "; ".join([f"{c['name']}={c['value']}" for c in cookies])

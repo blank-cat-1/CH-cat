@@ -21,7 +21,7 @@ class NotificationService:
     def _init_telegram(self):
         """初始化Telegram"""
         try:
-            from ..core.config import settings
+            from backend.core.config import settings
             if settings.telegram_bot_token:
                 self.telegram_enabled = True
                 logger.info("Telegram通知已启用")
@@ -63,7 +63,7 @@ class NotificationService:
         """发送Telegram消息"""
         try:
             import httpx
-            from ..core.config import settings
+            from backend.core.config import settings
             
             url = f"https://api.telegram.org/bot{settings.telegram_bot_token}/sendMessage"
             data = {
