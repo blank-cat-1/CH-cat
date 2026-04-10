@@ -10,7 +10,7 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 import logging
 
-from .engine import ThreadSummary, PostData
+from .crawler_models import ThreadSummary, PostData
 
 logger = logging.getLogger(__name__)
 

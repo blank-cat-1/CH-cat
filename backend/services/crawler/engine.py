@@ -7,50 +7,16 @@
 import asyncio
 import time
 from typing import Dict, Any, List, Optional, Tuple
-from dataclasses import dataclass
-from datetime import datetime
 import logging
 
 from .http_client import HttpClient
 from .parser import parse_forum_threads, parse_search_threads, parse_user_threads, parse_detail
 from .cookies import get_active_cookies
+from .crawler_models import ThreadSummary, PostData
 from ...models import Post, Subscription
 from ...core.logging_config import CrawlerLogger
 
 logger = logging.getLogger(__name__)
-
-
-@dataclass
-class ThreadSummary:
-    """帖子摘要"""
-    tid: str
-    title: str
-    url: str
-    author: str
-    author_id: Optional[str] = None
-    published_at: Optional[datetime] = None
-    board_name: Optional[str] = None
-    board_id: Optional[str] = None
-
-
-@dataclass
-class PostData:
-    """完整帖子数据"""
-    tid: str
-    title: str
-    url: str
-    author: str
-    author_id: Optional[str] = None
-    published_at: Optional[datetime] = None
-    board_name: Optional[str] = None
-    board_id: Optional[str] = None
-    preview_image: Optional[str] = None
-    magnet_link: Optional[str] = None
-    attachments: Optional[List[Dict]] = None
-    is_locked: bool = False
-    type_id: Optional[int] = None
-    type_name: Optional[str] = None
-    content: Optional[str] = None
 
 
 class SubscriptionCrawler:
