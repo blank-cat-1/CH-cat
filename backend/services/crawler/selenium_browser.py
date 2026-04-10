@@ -542,32 +542,34 @@ class SeleniumHttpClient:
         Returns:
             SeleniumResponse 对象
         """
-        # 检查缓存
-        if use_cache and url in self._html_cache:
-            cached_time = self._cache_times.get(url, 0)
-            if time.time() - cached_time < self._cache_ttl:
-                logger.debug(f"使用缓存: {url}")
-                return SeleniumResponse(self._html_cache[url], url)
-        
-        # 导航到页面
-        success = await self.browser.goto(url)
-        
-        if not success:
-            return SeleniumResponse("", url, status_code=500)
-        
-        # 获取页面源码
-        html = await self.browser.get_page_source()
-        
-        # 更新缓存
-        if use_cache:
-            self._html_cache[url] = html
-            self._cache_times[url] = time.time()
-        
-        return SeleniumResponse(html, url)
+        async with self.browser._lock:
+            # 检查缓存
+            if use_cache and url in self._html_cache:
+                cached_time = self._cache_times.get(url, 0)
+                if time.time() - cached_time < self._cache_ttl:
+                    logger.debug(f"使用缓存: {url}")
+                    return SeleniumResponse(self._html_cache[url], url)
+            
+            # 导航到页面
+            success = await self.browser.goto(url)
+            
+            if not success:
+                return SeleniumResponse("", url, status_code=500)
+            
+            # 获取页面源码
+            html = await self.browser.get_page_source()
+            
+            # 更新缓存
+            if use_cache:
+                self._html_cache[url] = html
+                self._cache_times[url] = time.time()
+            
+            return SeleniumResponse(html, url)
     
     async def get_cookies(self) -> List[Dict[str, Any]]:
         """获取当前浏览器 Cookie"""
-        return await self.browser.get_cookies()
+        async with self.browser._lock:
+            return await self.browser.get_cookies()
     
     async def close(self):
         """关闭客户端"""

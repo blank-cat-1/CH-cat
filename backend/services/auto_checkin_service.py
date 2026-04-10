@@ -132,7 +132,10 @@ class AutoCheckinService:
             # 获取 Cookie
             http_client_temp = HttpClient(max_concurrent=1, timeout=30)
             await http_client_temp.create()
-            cookies_dict = await http_client_temp._get_cookies()
+            cookies_dict = await http_client_temp.get_browser_cookies()
+            if isinstance(cookies_dict, list):
+                # get_browser_cookies 返回的是 [{name, value, ...}, ...] 格式
+                cookies_dict = {c['name']: c['value'] for c in cookies_dict if 'name' in c and 'value' in c}
             await http_client_temp.close()
 
             if not cookies_dict:
