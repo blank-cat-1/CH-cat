@@ -13,8 +13,8 @@ from .http_client import HttpClient
 from .parser import parse_forum_threads, parse_search_threads, parse_user_threads, parse_detail
 from .cookies import get_active_cookies
 from .crawler_models import ThreadSummary, PostData
-from ...models import Post, Subscription
-from ...core.logging_config import CrawlerLogger
+from ..models import Post, Subscription
+from ..core.logging_config import CrawlerLogger
 
 logger = logging.getLogger(__name__)
 
@@ -114,7 +114,7 @@ class SubscriptionCrawler:
     async def _load_subscription(self) -> Optional[Dict[str, Any]]:
         """从数据库加载订阅配置"""
         try:
-            from ...core.database import get_db_session
+            from ..core.database import get_db_session
             
             with get_db_session() as db:
                 sub = db.query(Subscription).filter(Subscription.id == self.subscription_id).first()
@@ -302,7 +302,7 @@ class SubscriptionCrawler:
             return 0
         
         try:
-            from ...core.database import get_db_session
+            from ..core.database import get_db_session
             
             with get_db_session() as db:
                 saved_count = 0
@@ -341,7 +341,7 @@ class SubscriptionCrawler:
     def _mark_first_run_complete(self):
         """标记首次运行完成"""
         try:
-            from ...core.database import get_db_session
+            from ..core.database import get_db_session
             
             with get_db_session() as db:
                 sub = db.query(Subscription).filter(Subscription.id == self.subscription_id).first()
