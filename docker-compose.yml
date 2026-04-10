@@ -1,13 +1,10 @@
-version: '3.8'
-
 services:
   crawler:
     # 使用预构建的镜像
     image: ghcr.io/blank-cat-1/ch-cat:latest
     container_name: sehuatang-crawler
     ports:
-      - "8900:8000"  # 后端API
-      - "3000:3000"  # 前端界面
+      - "3000:3000"  # 前端界面（后端 :8000 仅内部访问，不暴露）
     env_file:
       - .env
     environment:
@@ -35,8 +32,7 @@ services:
   postgres:
     image: postgres:15-alpine
     container_name: sehuatang-postgres
-    ports:
-      - "15432:5432"
+    # 数据库端口不对外暴露，仅 Docker 内部访问
     env_file:
       - .env
     environment:
