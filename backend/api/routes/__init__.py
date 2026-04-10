@@ -10,6 +10,7 @@ from .emby import router as emby_router
 from .telegram import router as telegram_router
 from .notification import router as notification_router
 from .health import router as health_router
+from .checkin import router as checkin_router
 
 __all__ = [
     "auth_router",
@@ -21,5 +22,6 @@ __all__ = [
     "emby_router",
     "telegram_router",
     "notification_router",
-    "health_router"
+    "health_router",
+    "checkin_router",
 ]

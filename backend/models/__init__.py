@@ -6,6 +6,8 @@ from .post import Post
 from .user import User
 from .auto_push import AutoPushRule, AutoPushLog
 from .cookie import Cookie
+from .checkin import CheckInRecord, CheckInConfig, ReplyTemplate
+from .system_log import SystemLog
 
 __all__ = [
     "Base",
@@ -16,6 +18,10 @@ __all__ = [
     "AutoPushRule",
     "AutoPushLog",
     "Cookie",
+    "CheckInRecord",
+    "CheckInConfig",
+    "ReplyTemplate",
+    "SystemLog",
 ]
 
 
@@ -30,3 +36,5 @@ def import_all_models():
     from . import user
     from . import auto_push
     from . import cookie
+    from . import checkin
+    from . import system_log

@@ -31,7 +31,8 @@ from api.routes import (
     emby_router,
     telegram_router,
     notification_router,
-    health_router
+    health_router,
+    checkin_router,
 )
 
 
@@ -108,6 +109,7 @@ app.include_router(emby_router, prefix="/api/emby", tags=["Emby"])
 app.include_router(telegram_router, prefix="/api/telegram", tags=["Telegram"])
 app.include_router(notification_router, prefix="/api/notifications", tags=["通知"])
 app.include_router(health_router, tags=["健康检查"])
+app.include_router(checkin_router, prefix="/api/checkin", tags=["签到管理"])
 
 
 # 健康检查端点
