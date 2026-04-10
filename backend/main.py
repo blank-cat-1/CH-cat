@@ -11,6 +11,7 @@ import uvicorn
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 # 初始化日志
 from core import setup_logging, settings
@@ -111,6 +112,15 @@ app.include_router(notification_router, prefix="/api/notifications", tags=["通�
 app.include_router(health_router, tags=["健康检查"])
 app.include_router(checkin_router, prefix="/api/checkin", tags=["签到管理"])
 
+# 挂载前端静态文件（统一 8900 端口）
+import os
+frontend_dist = os.path.join(os.path.dirname(__file__), "..", "frontend", "build")
+if os.path.exists(frontend_dist):
+    app.mount("/", StaticFiles(directory=frontend_dist, html=True), name="frontend")
+    logger.info(f"✅ 前端静态文件已挂载: {frontend_dist}")
+else:
+    logger.warning(f"⚠️ 前端静态文件未找到: {frontend_dist}")
+
 
 # 健康检查端点
 @app.get("/health")
@@ -126,18 +136,6 @@ async def health_check():
         "timestamp": datetime.now().isoformat(),
         "version": "2.0.0",
         "database": "connected" if db_healthy else "disconnected"
-    }
-
-
-# 根路径
-@app.get("/")
-async def root():
-    """根路径"""
-    return {
-        "name": "Sehuatang 爬虫系统",
-        "version": "2.0.0",
-        "docs": "/docs",
-        "health": "/health"
     }
 
 

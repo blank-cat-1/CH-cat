@@ -4,8 +4,7 @@ services:
     image: ghcr.io/blank-cat-1/ch-cat:latest
     container_name: sehuatang-crawler
     ports:
-      - "3000:3000"  # 前端界面
-      - "8000:8000"  # 后端API（供前端调用）
+      - "8900:8000"  # 统一 8900 端口（前端+API）
     env_file:
       - .env
     environment:
