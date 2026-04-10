@@ -1,7 +1,7 @@
 # Core模块
 from .config import settings, Settings
+from models.base import Base
 from .database import (
-    Base,
     engine,
     SessionLocal,
     get_db,
