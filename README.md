@@ -19,6 +19,95 @@ docker compose down && docker compose up -d
 docker compose pull && docker compose up -d
 ```
 
+### 手动复制部署
+
+如果无法访问 GitHub raw，也可以直接复制下方文件内容到本地部署。
+
+**1. 创建 `docker-compose.yml`：**
+
+```yaml
+version: '3.8'
+
+services:
+  crawler:
+    image: ghcr.io/blank-cat-1/ch-cat:latest
+    container_name: sehuatang-crawler
+    ports:
+      - "8900:8000"
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=${DATABASE_NAME:-sehuatang_db}
+      - DATABASE_USER=${DATABASE_USER:-postgres}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD:-postgres123}
+      - PYTHONPATH=/app/backend
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
+      - SELENIUM_HEADLESS=${SELENIUM_HEADLESS:-true}
+      - SELENIUM_PAGE_TIMEOUT=${SELENIUM_PAGE_TIMEOUT:-30}
+      - USE_SELENIUM_MODE=${USE_SELENIUM_MODE:-true}
+      - CHROME_BIN=/usr/bin/google-chrome
+    volumes:
+      - data:/app/data
+      - logs:/app/logs
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    shm_size: '2gb'
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: sehuatang-postgres
+    ports:
+      - "15432:5432"
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME:-sehuatang_db}
+      - POSTGRES_USER=${DATABASE_USER:-postgres}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD:-postgres123}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  data:
+  logs:
+  postgres_data:
+
+networks:
+  default:
+    name: sehuatang-network
+```
+
+**2. 创建 `.env` 环境变量文件：**
+
+```bash
+# 数据库
+DATABASE_NAME=sehuatang_db
+DATABASE_USER=postgres
+DATABASE_PASSWORD=你的密码
+
+# 管理员
+ADMIN_PASSWORD=你的管理员密码
+
+# Telegram（可选）
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_CHAT_ID=
+
+# Selenium
+SELENIUM_HEADLESS=true
+USE_SELENIUM_MODE=true
+```
+
+**3. 启动服务：**
+
+```bash
+docker compose up -d
+```
+
 ## 功能特性
 
 - **论坛爬虫**: 自动爬取sehuatang论坛帖子（Selenium 自动维护 Cookie）
