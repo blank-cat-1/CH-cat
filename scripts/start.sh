@@ -20,10 +20,9 @@ cd /app/backend
 echo "📡 启动后端服务..."
 python3 -m uvicorn main:app --host 0.0.0.0 --port 8000 --workers 1 &
 
-# 启动前端
+# 启动前端（使用 Python 内置 http.server）
 echo "🎨 启动前端服务..."
-cd /app/frontend
-serve -s build -l 3000 &
+cd /app/frontend/build && python3 -m http.server 3000 &
 
 echo "✅ 启动完成！"
 echo "📡 后端API: http://localhost:8000"
