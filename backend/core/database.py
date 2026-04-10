@@ -86,7 +86,7 @@ def check_db_health() -> bool:
 
 def init_database():
     """初始化数据库，创建所有表"""
-    from .models import import_all_models
+    from models import import_all_models
     
     # 导入所有模型
     import_all_models()

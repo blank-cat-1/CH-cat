@@ -5,6 +5,7 @@ from .subscription import Subscription
 from .post import Post
 from .user import User
 from .auto_push import AutoPushRule, AutoPushLog
+from .cookie import Cookie
 
 __all__ = [
     "Base",
@@ -13,7 +14,8 @@ __all__ = [
     "Post",
     "User",
     "AutoPushRule",
-    "AutoPushLog"
+    "AutoPushLog",
+    "Cookie",
 ]
 
 
@@ -27,3 +29,4 @@ def import_all_models():
     from . import post
     from . import user
     from . import auto_push
+    from . import cookie
